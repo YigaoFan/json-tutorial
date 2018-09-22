@@ -71,9 +71,6 @@ static void test_parse_root_not_singular() {
     EXPECT_EQ_INT(LEPT_NULL, lept_get_type(&v));
 }
 
-
-
-
 static void test_parse() {
     test_parse_null();
     test_parse_expect_value();

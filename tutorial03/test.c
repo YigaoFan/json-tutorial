@@ -107,20 +107,20 @@ static void test_parse_number() {
 static void test_parse_string() {
     TEST_STRING("", "\"\"");
     TEST_STRING("Hello", "\"Hello\"");
-#if 0
+#if 1
     TEST_STRING("Hello\nWorld", "\"Hello\\nWorld\"");
     TEST_STRING("\" \\ / \b \f \n \r \t", "\"\\\" \\\\ \\/ \\b \\f \\n \\r \\t\"");
 #endif
 }
 
-#define TEST_ERROR(error, json)\
-    do {\
-        lept_value v;\
-        lept_init(&v);\
-        v.type = LEPT_FALSE;\
-        EXPECT_EQ_INT(error, lept_parse(&v, json));\
-        EXPECT_EQ_INT(LEPT_NULL, lept_get_type(&v));\
-        lept_free(&v);\
+#define TEST_ERROR(error, json)                         \
+    do {                                                \
+        lept_value v;                                   \
+        lept_init(&v);                                  \
+        v.type = LEPT_FALSE;                            \
+        EXPECT_EQ_INT(error, lept_parse(&v, json));     \
+        EXPECT_EQ_INT(LEPT_NULL, lept_get_type(&v));    \
+        lept_free(&v);                                  \
     } while(0)
 
 static void test_parse_expect_value() {
@@ -163,7 +163,7 @@ static void test_parse_missing_quotation_mark() {
 }
 
 static void test_parse_invalid_string_escape() {
-#if 0
+#if 1
     TEST_ERROR(LEPT_PARSE_INVALID_STRING_ESCAPE, "\"\\v\"");
     TEST_ERROR(LEPT_PARSE_INVALID_STRING_ESCAPE, "\"\\'\"");
     TEST_ERROR(LEPT_PARSE_INVALID_STRING_ESCAPE, "\"\\0\"");
@@ -172,7 +172,7 @@ static void test_parse_invalid_string_escape() {
 }
 
 static void test_parse_invalid_string_char() {
-#if 0
+#if 1
     TEST_ERROR(LEPT_PARSE_INVALID_STRING_CHAR, "\"\x01\"");
     TEST_ERROR(LEPT_PARSE_INVALID_STRING_CHAR, "\"\x1F\"");
 #endif
@@ -188,13 +188,25 @@ static void test_access_null() {
 }
 
 static void test_access_boolean() {
-    /* \TODO */
     /* Use EXPECT_TRUE() and EXPECT_FALSE() */
+    lept_value v;
+    lept_init(&v);
+    lept_set_string(&v, "a", 1);
+    lept_set_boolean(&v, 1);
+    EXPECT_TRUE(lept_get_boolean(&v));
+    lept_set_boolean(&v, 0);
+    EXPECT_FALSE(lept_get_boolean(&v));
+    lept_free(&v);
 }
-
 static void test_access_number() {
-    /* \TODO */
-}
+    lept_value v;
+    lept_init(&v);
+    lept_set_number(&v, 2.0);
+    EXPECT_EQ_DOUBLE(2.0, lept_get_number(&v));
+    lept_set_number(&v, 0.0);
+    EXPECT_EQ_DOUBLE(0.0, lept_get_number(&v));
+    lept_free(&v);
+   }
 
 static void test_access_string() {
     lept_value v;
